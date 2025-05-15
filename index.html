@@ -145,31 +145,43 @@
   <!-- AOS Script -->
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   <script>
-    AOS.init();
+        let isLogin = true;
 
     function toggleForm() {
-      const title = document.getElementById('form-title');
-      const toggleText = document.getElementById('toggle-text');
-      const button = document.querySelector('button');
-      const icon = button.querySelector('i');
-
-      if (title.textContent === 'Login') {
-        title.textContent = 'Register';
-        button.textContent = 'Register';
-        button.appendChild(icon);
-        toggleText.textContent = 'Already have an account?';
-        icon.className = 'fas fa-user-plus';
-      } else {
-        title.textContent = 'Login';
-        button.textContent = 'Login';
-        button.appendChild(icon);
-        toggleText.textContent = "Don't have an account?";
-        icon.className = 'fas fa-sign-in-alt';
-      }
+      isLogin = !isLogin;
+      document.getElementById('form-title').textContent = isLogin ? 'Login' : 'Register';
+      document.querySelector('button').textContent = isLogin ? 'Login' : 'Register';
+      document.getElementById('toggle-text').textContent = isLogin ? "Don't have an account?" : "Already have an account?";
     }
 
     function handleAuth() {
-      alert('Authentication function goes here.');
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!email || !password) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (isLogin) {
+        if (users[email] && users[email] === password) {
+          localStorage.setItem("loggedInUser", email);
+          window.location.href = "shop.html";
+        } else {
+          alert("Invalid email or password.");
+        }
+      } else {
+        if (users[email]) {
+          alert("User already exists. Please login.");
+        } else {
+          users[email] = password;
+          localStorage.setItem("users", JSON.stringify(users));
+          alert("Registration successful! You can now log in.");
+          toggleForm();
+        }
+      }
     }
   </script>
 </body>
