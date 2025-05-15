@@ -3,110 +3,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login | Shopping Site</title>
+  <title> Login</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/a2d79e2f4b.js" crossorigin="anonymous"></script>
+
+  <!-- AOS Animation -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+
     .container {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      width: 320px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      width: 360px;
+      color: white;
+      animation: bounceIn 1s ease;
     }
+
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
     h2 {
       text-align: center;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .input-group {
+      position: relative;
       margin-bottom: 1rem;
     }
+
+    .input-group i {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      transform: translateY(-50%);
+      color: #ccc;
+    }
+
     input {
       width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      padding: 12px 12px 12px 38px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1rem;
+      outline: none;
     }
+
+    input::placeholder {
+      color: #eee;
+    }
+
     button {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-top: 12px;
-      background: #007bff;
-      color: white;
+      background: #ffffff;
+      color: #2575fc;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       font-weight: bold;
+      font-size: 1rem;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
     }
+
+    button i {
+      margin-left: 8px;
+    }
+
+    button:hover {
+      background: #e0e0e0;
+    }
+
     p {
       text-align: center;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
     }
+
     .link {
-      color: #007bff;
+      color: #ffdd57;
       cursor: pointer;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+
+    .link:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <div class="container" data-aos="zoom-in">
     <h2 id="form-title">Login</h2>
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
-    <button onclick="handleAuth()">Login</button>
+    <div class="input-group">
+      <i class="fas fa-envelope"></i>
+      <input type="email" id="email" placeholder="Email" required />
+    </div>
+    <div class="input-group">
+      <i class="fas fa-lock"></i>
+      <input type="password" id="password" placeholder="Password" required />
+    </div>
+    <button onclick="handleAuth()">Login <i class="fas fa-sign-in-alt"></i></button>
     <p>
       <span id="toggle-text">Don't have an account?</span>
       <span class="link" onclick="toggleForm()">Register</span>
     </p>
   </div>
 
+  <!-- AOS Script -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   <script>
-    let isLogin = true;
+    AOS.init();
 
     function toggleForm() {
-      isLogin = !isLogin;
-      document.getElementById('form-title').textContent = isLogin ? 'Login' : 'Register';
-      document.querySelector('button').textContent = isLogin ? 'Login' : 'Register';
-      document.getElementById('toggle-text').textContent = isLogin ? "Don't have an account?" : "Already have an account?";
+      const title = document.getElementById('form-title');
+      const toggleText = document.getElementById('toggle-text');
+      const button = document.querySelector('button');
+      const icon = button.querySelector('i');
+
+      if (title.textContent === 'Login') {
+        title.textContent = 'Register';
+        button.textContent = 'Register';
+        button.appendChild(icon);
+        toggleText.textContent = 'Already have an account?';
+        icon.className = 'fas fa-user-plus';
+      } else {
+        title.textContent = 'Login';
+        button.textContent = 'Login';
+        button.appendChild(icon);
+        toggleText.textContent = "Don't have an account?";
+        icon.className = 'fas fa-sign-in-alt';
+      }
     }
 
     function handleAuth() {
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-
-      if (!email || !password) {
-        alert("Please fill in all fields.");
-        return;
-      }
-
-      const users = JSON.parse(localStorage.getItem("users") || "{}");
-
-      if (isLogin) {
-        if (users[email] && users[email] === password) {
-          localStorage.setItem("loggedInUser", email);
-          window.location.href = "shop.html";
-        } else {
-          alert("Invalid email or password.");
-        }
-      } else {
-        if (users[email]) {
-          alert("User already exists. Please login.");
-        } else {
-          users[email] = password;
-          localStorage.setItem("users", JSON.stringify(users));
-          alert("Registration successful! You can now log in.");
-          toggleForm();
-        }
-      }
+      alert('Authentication function goes here.');
     }
   </script>
-
 </body>
 </html>
