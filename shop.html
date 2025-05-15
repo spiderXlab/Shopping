@@ -4,29 +4,140 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Shop</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/a2d79e2f4b.js" crossorigin="anonymous"></script>
+
+  <!-- AOS Animation -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+
   <style>
-    body { font-family: sans-serif; margin: 0; background: #f9f9f9; }
-    header { background: #333; color: white; padding: 1rem; text-align: center; display: flex; justify-content: space-between; align-items: center; }
-    .logout-btn { background: red; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; }
-    .products { display: flex; flex-wrap: wrap; gap: 1rem; padding: 2rem; }
-    .product { background: white; padding: 1rem; border-radius: 10px; width: 200px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
-    .product img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; }
-    button { background: green; color: white; border: none; padding: 0.5rem; border-radius: 5px; cursor: pointer; margin-top: 10px; }
-    .go-checkout { position: fixed; bottom: 20px; right: 20px; background: #007bff; color: white; border: none; padding: 1rem; border-radius: 50%; font-size: 18px; cursor: pointer; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .logout-btn {
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .products {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .product {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border-radius: 15px;
+      padding: 1rem;
+      width: 220px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      color: white;
+      transition: transform 0.3s ease;
+    }
+
+    .product:hover {
+      transform: scale(1.05);
+    }
+
+    .product img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .product h3 {
+      margin: 0.7rem 0 0.3rem;
+    }
+
+    .product p {
+      margin: 0;
+      font-weight: bold;
+    }
+
+    .product button {
+      background: #00cc88;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      margin-top: 0.8rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .product button:hover {
+      background: #00b47c;
+    }
+
+    .go-checkout {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ffce00;
+      color: black;
+      border: none;
+      padding: 1rem;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .go-checkout:hover {
+      transform: scale(1.1);
+    }
   </style>
 </head>
 <body>
 
 <header>
   <h2>Welcome, <span id="user-name"></span></h2>
-  <button class="logout-btn" onclick="logout()">Logout</button>
+  <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
 </header>
 
 <div class="products" id="product-list"></div>
 
-<button class="go-checkout" onclick="window.location.href='checkout.html'">🛒</button>
+<button class="go-checkout" onclick="window.location.href='checkout.html'" title="Go to Cart">
+  <i class="fas fa-shopping-cart"></i>
+</button>
 
+<!-- AOS Animation -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script>
+  AOS.init();
+
   const user = localStorage.getItem('loggedInUser');
   if (!user) window.location.href = 'index.html';
   document.getElementById('user-name').textContent = user;
@@ -54,14 +165,16 @@
 
   function renderProducts() {
     list.innerHTML = "";
-    products.forEach(p => {
+    products.forEach((p, index) => {
       const el = document.createElement("div");
       el.className = "product";
+      el.setAttribute("data-aos", "fade-up");
+      el.setAttribute("data-aos-delay", index * 100);
       el.innerHTML = `
         <img src="${p.img}" />
         <h3>${p.name}</h3>
         <p>$${p.price}</p>
-        <button onclick="addToCart(${p.id})">Add to Cart</button>
+        <button onclick="addToCart(${p.id})"><i class="fas fa-cart-plus"></i> Add</button>
       `;
       list.appendChild(el);
     });
